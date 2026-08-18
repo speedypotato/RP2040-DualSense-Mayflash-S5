@@ -42,7 +42,12 @@ void buttons_task(void)
 	static uint8_t seq = 0;
 	static uint64_t s2_down_since = 0;
 
-	if (pressed(GPIO_S2))
+	bool s2 = pressed(GPIO_S2);
+#ifdef GPIO_S2_ALT
+	s2 = s2 || pressed(GPIO_S2_ALT);
+#endif
+
+	if (s2)
 	{
 		uint64_t now = time_us_64();
 		if (s2_down_since == 0)
@@ -58,6 +63,9 @@ void buttons_task(void)
 	}
 
 	bool up = pressed(GPIO_UP) || pressed(GPIO_UP_ALT);
+#ifdef GPIO_UP_ALT2
+	up = up || pressed(GPIO_UP_ALT2);
+#endif
 	bool down = pressed(GPIO_DOWN);
 	bool left = pressed(GPIO_LEFT), right = pressed(GPIO_RIGHT);
 	uint8_t dpad = HAT_NONE;
@@ -97,17 +105,29 @@ void buttons_task(void)
 		b1 |= (1 << 2);
 	if (pressed(GPIO_R2))
 		b1 |= (1 << 3);
-	if (pressed(GPIO_S1))
+	bool s1 = pressed(GPIO_S1);
+#ifdef GPIO_S1_ALT
+	s1 = s1 || pressed(GPIO_S1_ALT);
+#endif
+	if (s1)
 		b1 |= (1 << 4); // Select / Share
-	if (pressed(GPIO_S2))
+	if (s2)
 		b1 |= (1 << 5); // Start
 	if (pressed(GPIO_L3))
 		b1 |= (1 << 6);
-	if (pressed(GPIO_R3))
+	bool r3 = pressed(GPIO_R3);
+#ifdef GPIO_R3_ALT
+	r3 = r3 || pressed(GPIO_R3_ALT);
+#endif
+	if (r3)
 		b1 |= (1 << 7);
 
 	uint8_t b2 = 0;
-	if (pressed(GPIO_A1))
+	bool a1 = pressed(GPIO_A1);
+#ifdef GPIO_A1_ALT
+	a1 = a1 || pressed(GPIO_A1_ALT);
+#endif
+	if (a1)
 		b2 |= (1 << 0); // Home / PS
 	if (pressed(GPIO_A2))
 		b2 |= (1 << 1); // touchpad click

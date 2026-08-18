@@ -21,6 +21,11 @@ static void core1_main(void)
 {
 	pio_usb_configuration_t pio_cfg = PIO_USB_DEFAULT_CONFIG;
 	pio_cfg.pin_dp = PIO_USB_DP_PIN;
+#ifdef PIO_USB_PINOUT_REVERSED
+	// D- = D+ - 1 (e.g. SplitFox Pro: D+ = GPIO3, D- = GPIO2) instead of the
+	// Pico-PIO-USB default of D- = D+ + 1.
+	pio_cfg.pinout = PIO_USB_PINOUT_DMDP;
+#endif
 	tuh_configure(BOARD_TUH_RHPORT, TUH_CFGID_RPI_PIO_USB_CONFIGURATION, &pio_cfg);
 
 	tuh_init(BOARD_TUH_RHPORT);
